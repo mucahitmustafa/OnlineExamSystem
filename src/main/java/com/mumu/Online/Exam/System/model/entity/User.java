@@ -1,4 +1,4 @@
-package com.mumu.Online.Exam.System.model;
+package com.mumu.Online.Exam.System.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

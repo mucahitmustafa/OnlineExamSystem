@@ -1,6 +1,7 @@
-package com.mumu.Online.Exam.System.model;
+package com.mumu.Online.Exam.System.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mumu.Online.Exam.System.model.base.BaseModel;
 
 import javax.persistence.*;
 import java.util.List;
