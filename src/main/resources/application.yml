@@ -1,0 +1,16 @@
+server:
+  port: 8081
+spring:
+  profiles:
+    active: development
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    schemas: dbo
+    encoding: 'UTF-8'
+  datasource:
+    hikari:
+      schema: dbo
