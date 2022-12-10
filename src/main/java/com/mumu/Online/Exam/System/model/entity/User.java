@@ -1,11 +1,16 @@
 package com.mumu.Online.Exam.System.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mumu.Online.Exam.System.model.base.BaseModel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 @JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer"})
-public class User {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseModel {
 
     private String name;
 
