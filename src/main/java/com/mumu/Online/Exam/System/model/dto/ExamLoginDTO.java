@@ -10,7 +10,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class ExamResultDTO implements Serializable {
+public class ExamLoginDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -19,5 +19,6 @@ public class ExamResultDTO implements Serializable {
     private String answers;
     private float score;
     private Date loginDate;
+    private Long duration;
 
 }

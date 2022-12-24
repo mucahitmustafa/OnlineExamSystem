@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ExamResultNotFoundException extends RuntimeException {
-    public ExamResultNotFoundException() {
+public class ExamLoginNotFoundException extends RuntimeException {
+    public ExamLoginNotFoundException() {
         super("Exam result not found!");
     }
 }

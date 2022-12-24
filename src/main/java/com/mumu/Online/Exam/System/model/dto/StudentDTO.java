@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,6 +21,5 @@ public class StudentDTO implements Serializable {
     private String password;
     private boolean blocked;
     private Date lastLoginDate;
-    private List<ExamResultDTO> results;
 
 }

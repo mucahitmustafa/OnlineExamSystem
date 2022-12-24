@@ -22,20 +22,6 @@ public class Foundation extends BaseModel {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "foundation_managers",
-            joinColumns = @JoinColumn(name = "manager_id"),
-            inverseJoinColumns = @JoinColumn(name = "foundation_id"))
-    private List<Examiner> managers;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "foundation_examiners",
-            joinColumns = @JoinColumn(name = "examiner_id"),
-            inverseJoinColumns = @JoinColumn(name = "foundation_id"))
-    private List<Examiner> examiners;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
             name = "foundation_student",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "foundation_id"))

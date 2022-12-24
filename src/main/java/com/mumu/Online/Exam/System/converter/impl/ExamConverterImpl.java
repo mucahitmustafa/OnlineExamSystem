@@ -4,7 +4,6 @@ import com.mumu.Online.Exam.System.converter.ExamConverter;
 import com.mumu.Online.Exam.System.model.dto.ExamDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
 import com.mumu.Online.Exam.System.model.entity.Student;
-import com.mumu.Online.Exam.System.service.ExaminerService;
 import com.mumu.Online.Exam.System.service.StudentService;
 import org.springframework.stereotype.Component;
 
@@ -13,12 +12,9 @@ import java.util.stream.Collectors;
 @Component
 public class ExamConverterImpl implements ExamConverter {
 
-    private final ExaminerService examinerService;
     private final StudentService studentService;
 
-    public ExamConverterImpl(final ExaminerService examinerService,
-                             final StudentService studentService) {
-        this.examinerService = examinerService;
+    public ExamConverterImpl(final StudentService studentService) {
         this.studentService = studentService;
     }
 
@@ -29,7 +25,6 @@ public class ExamConverterImpl implements ExamConverter {
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
         to.setDuration(from.getDuration());
-        to.setExaminerId(from.getExaminer().getId());
         to.setStudents(from.getStudents().stream().map(Student::getId).collect(Collectors.toList()));
         return to;
     }
@@ -41,7 +36,6 @@ public class ExamConverterImpl implements ExamConverter {
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
         to.setDuration(from.getDuration());
-        to.setExaminer(examinerService.getById(from.getExaminerId()));
         to.setStudents(from.getStudents().stream().map(studentService::getById).collect(Collectors.toList()));
         return to;
     }

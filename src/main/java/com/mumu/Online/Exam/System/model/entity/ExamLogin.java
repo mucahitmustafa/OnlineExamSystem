@@ -12,7 +12,7 @@ import java.util.Date;
 @JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer"})
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ExamResult extends BaseModel {
+public class ExamLogin extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +29,6 @@ public class ExamResult extends BaseModel {
     private float score;
 
     private Date loginDate;
+    private Long duration;
 
 }

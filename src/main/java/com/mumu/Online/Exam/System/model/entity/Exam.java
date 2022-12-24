@@ -25,9 +25,6 @@ public class Exam extends BaseModel {
 
     private Long duration;
 
-    @ManyToOne
-    private Examiner examiner;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "exam_students",

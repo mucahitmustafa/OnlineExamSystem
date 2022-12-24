@@ -18,8 +18,6 @@ public class ExamDTO implements Serializable {
     private Date startDate;
     private Date endDate;
     private Long duration;
-    private Long examinerId;
     private List<Long> students;
-    private List<QuestionDTO> questions;
 
 }
