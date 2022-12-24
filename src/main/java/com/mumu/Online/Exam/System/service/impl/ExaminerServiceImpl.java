@@ -53,4 +53,9 @@ public class ExaminerServiceImpl extends AbstractService implements ExaminerServ
         examiner.setCustomer(customer);
         return examinerRepository.save(examiner);
     }
+
+    @Override
+    public Examiner getById(Long examinerId) {
+        return examinerRepository.findById(examinerId).orElseThrow(ExaminerNotFoundException::new);
+    }
 }

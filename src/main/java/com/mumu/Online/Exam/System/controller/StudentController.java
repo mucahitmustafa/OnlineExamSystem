@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/students")
 public class StudentController extends AbstractController {
 
     private final StudentConverter studentConverter;
@@ -23,7 +24,7 @@ public class StudentController extends AbstractController {
         this.studentService = studentService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<StudentDTO> getAll(@RequestHeader("api-key") final String apiKey) {
         return studentService.getAll(apiKey).stream().map(studentConverter::toDto).collect(Collectors.toList());
     }
@@ -39,13 +40,13 @@ public class StudentController extends AbstractController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public StudentDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody StudentDTO changedDto) {
         Student student = studentConverter.toModel(changedDto);
         return studentConverter.toDto(studentService.update(apiKey, student));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public StudentDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody StudentDTO createdDto) {
         Student student = studentConverter.toModel(createdDto);
         return studentConverter.toDto(studentService.create(apiKey, student));

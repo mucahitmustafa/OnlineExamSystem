@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/questions")
 public class QuestionController extends AbstractController {
 
     private final QuestionConverter questionConverter;
@@ -23,7 +24,7 @@ public class QuestionController extends AbstractController {
         this.questionService = questionService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<QuestionDTO> getAll(@RequestHeader("api-key") final String apiKey) {
         return questionService.getAll(apiKey).stream().map(questionConverter::toDto).collect(Collectors.toList());
     }
@@ -39,13 +40,13 @@ public class QuestionController extends AbstractController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public QuestionDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody QuestionDTO changedDto) {
         Question question = questionConverter.toModel(changedDto);
         return questionConverter.toDto(questionService.update(apiKey, question));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public QuestionDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody QuestionDTO createdDto) {
         Question question = questionConverter.toModel(createdDto);
         return questionConverter.toDto(questionService.create(apiKey, question));

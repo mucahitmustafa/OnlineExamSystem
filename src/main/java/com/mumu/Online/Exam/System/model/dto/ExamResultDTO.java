@@ -14,8 +14,8 @@ public class ExamResultDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private ExamDTO exam;
-    private StudentDTO student;
+    private Long examId;
+    private Long studentId;
     private String answers;
     private float score;
     private Date loginDate;

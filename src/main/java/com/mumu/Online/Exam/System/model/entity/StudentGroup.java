@@ -20,11 +20,4 @@ public class StudentGroup extends BaseModel {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "student_groups",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Student> students;
-
 }

@@ -53,4 +53,9 @@ public class StudentGroupServiceImpl extends AbstractService implements StudentG
         studentGroup.setCustomer(customer);
         return studentGroupRepository.save(studentGroup);
     }
+
+    @Override
+    public StudentGroup getById(Long groupId) {
+        return studentGroupRepository.findById(groupId).orElseThrow(StudentGroupNotFoundException::new);
+    }
 }

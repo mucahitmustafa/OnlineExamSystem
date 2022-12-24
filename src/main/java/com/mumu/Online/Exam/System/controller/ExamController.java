@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/exams")
 public class ExamController extends AbstractController {
 
     private final ExamConverter examConverter;
@@ -23,7 +24,7 @@ public class ExamController extends AbstractController {
         this.examService = examService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<ExamDTO> getAll(@RequestHeader("api-key") final String apiKey) {
         return examService.getAll(apiKey).stream().map(examConverter::toDto).collect(Collectors.toList());
     }
@@ -34,18 +35,18 @@ public class ExamController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
+    public ResponseEntity<Void> delete(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
         examService.delete(apiKey, id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ExamDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody ExamDTO changedDto) {
         Exam exam = examConverter.toModel(changedDto);
         return examConverter.toDto(examService.update(apiKey, exam));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public ExamDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExamDTO createdDto) {
         Exam exam = examConverter.toModel(createdDto);
         return examConverter.toDto(examService.create(apiKey, exam));

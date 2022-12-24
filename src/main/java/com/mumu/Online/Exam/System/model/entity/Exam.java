@@ -23,21 +23,16 @@ public class Exam extends BaseModel {
 
     private Date endDate;
 
+    private Long duration;
+
     @ManyToOne
     private Examiner examiner;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "exam_students",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "exam_id"))
     private List<Student> students;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "exam_questions",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "exam_id"))
-    private List<Question> questions;
 
 }

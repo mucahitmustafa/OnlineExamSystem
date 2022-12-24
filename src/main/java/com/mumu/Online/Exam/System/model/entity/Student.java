@@ -22,11 +22,4 @@ public class Student extends User {
     @ManyToOne
     private StudentGroup group;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "student_results",
-            joinColumns = @JoinColumn(name = "exam_result_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<ExamResult> results;
-
 }

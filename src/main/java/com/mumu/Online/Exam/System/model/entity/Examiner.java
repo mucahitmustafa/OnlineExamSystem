@@ -17,11 +17,4 @@ public class Examiner extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "examiner_exams",
-            joinColumns = @JoinColumn(name = "exam_id"),
-            inverseJoinColumns = @JoinColumn(name = "examiner_id"))
-    private List<Exam> exams;
-
 }

@@ -14,4 +14,6 @@ public interface StudentService {
     Student update(String apiKey, Student student);
 
     Student create(String apiKey, Student student);
+
+    Student getById(Long studentId);
 }

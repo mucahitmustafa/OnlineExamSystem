@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/examiners")
 public class ExaminerController extends AbstractController {
 
     private final ExaminerConverter examinerConverter;
@@ -24,7 +25,7 @@ public class ExaminerController extends AbstractController {
         this.examinerService = examinerService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<ExaminerDTO> getAll(@RequestHeader("api-key") final String apiKey) {
         return examinerService.getAll(apiKey).stream().map(examinerConverter::toDto).collect(Collectors.toList());
     }
@@ -40,13 +41,13 @@ public class ExaminerController extends AbstractController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ExaminerDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody ExaminerDTO changedDto) {
         Examiner examiner = examinerConverter.toModel(changedDto);
         return examinerConverter.toDto(examinerService.update(apiKey, examiner));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public ExaminerDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExaminerDTO createdDto) {
         Examiner examiner = examinerConverter.toModel(createdDto);
         return examinerConverter.toDto(examinerService.create(apiKey, examiner));

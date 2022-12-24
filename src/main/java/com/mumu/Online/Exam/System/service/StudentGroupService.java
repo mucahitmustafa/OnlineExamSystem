@@ -15,4 +15,6 @@ public interface StudentGroupService {
     StudentGroup update(String apiKey, StudentGroup studentGroup);
 
     StudentGroup create(String apiKey, StudentGroup studentGroup);
+
+    StudentGroup getById(Long groupId);
 }

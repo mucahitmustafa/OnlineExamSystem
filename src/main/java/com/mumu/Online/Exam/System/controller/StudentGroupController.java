@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/studentGroups")
 public class StudentGroupController extends AbstractController {
 
     private final StudentGroupConverter studentGroupConverter;
@@ -24,7 +25,7 @@ public class StudentGroupController extends AbstractController {
         this.studentGroupService = studentGroupService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<StudentGroupDTO> getAll(@RequestHeader("api-key") final String apiKey) {
         return studentGroupService.getAll(apiKey).stream().map(studentGroupConverter::toDto).collect(Collectors.toList());
     }
@@ -40,13 +41,13 @@ public class StudentGroupController extends AbstractController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public StudentGroupDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody StudentGroupDTO changedDto) {
         StudentGroup studentGroup = studentGroupConverter.toModel(changedDto);
         return studentGroupConverter.toDto(studentGroupService.update(apiKey, studentGroup));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public StudentGroupDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody StudentGroupDTO createdDto) {
         StudentGroup studentGroup = studentGroupConverter.toModel(createdDto);
         return studentGroupConverter.toDto(studentGroupService.create(apiKey, studentGroup));

@@ -53,4 +53,9 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
         student.setCustomer(customer);
         return studentRepository.save(student);
     }
+
+    @Override
+    public Student getById(Long studentId) {
+        return studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
+    }
 }

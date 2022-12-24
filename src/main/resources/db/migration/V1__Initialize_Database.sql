@@ -58,6 +58,7 @@ CREATE TABLE exam
     created     TIMESTAMP(3) NOT NULL,
     updated     TIMESTAMP(3) NOT NULL,
     deleted     BOOLEAN      NOT NULL,
+    duration    BIGINT,
     examiner_id BIGINT       NOT NULL,
     start_date  TIMESTAMP(3) NOT NULL,
     end_date    TIMESTAMP(3) NOT NULL

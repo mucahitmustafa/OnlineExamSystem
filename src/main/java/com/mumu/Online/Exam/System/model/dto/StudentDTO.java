@@ -16,7 +16,7 @@ public class StudentDTO implements Serializable {
 
     private Long id;
     private String number;
-    private StudentGroupDTO group;
+    private Long groupId;
     private String name;
     private String mail;
     private String password;

@@ -52,4 +52,9 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
         exam.setCustomer(customer);
         return examRepository.save(exam);
     }
+
+    @Override
+    public Exam getById(Long examId) {
+        return examRepository.findById(examId).orElseThrow(ExamNotFoundException::new);
+    }
 }

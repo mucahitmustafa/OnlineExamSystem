@@ -20,7 +20,7 @@ public class FoundationController extends AbstractController {
         this.foundationService = foundationService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public FoundationDTO get(@RequestHeader("api-key") final String apiKey) {
         return foundationConverter.toDto(foundationService.validate(apiKey));
     }

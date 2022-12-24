@@ -14,4 +14,6 @@ public interface ExamService {
     Exam update(String apiKey, Exam exam);
 
     Exam create(String apiKey, Exam exam);
+
+    Exam getById(Long examId);
 }

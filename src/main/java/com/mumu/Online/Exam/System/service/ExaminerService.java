@@ -14,4 +14,6 @@ public interface ExaminerService {
     Examiner update(String apiKey, Examiner examiner);
 
     Examiner create(String apiKey, Examiner examiner);
+
+    Examiner getById(Long examinerId);
 }

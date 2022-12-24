@@ -1,30 +1,30 @@
 package com.mumu.Online.Exam.System.converter.impl;
 
-import com.mumu.Online.Exam.System.converter.ExamConverter;
 import com.mumu.Online.Exam.System.converter.ExamResultConverter;
-import com.mumu.Online.Exam.System.converter.StudentConverter;
 import com.mumu.Online.Exam.System.model.dto.ExamResultDTO;
 import com.mumu.Online.Exam.System.model.entity.ExamResult;
+import com.mumu.Online.Exam.System.service.ExamService;
+import com.mumu.Online.Exam.System.service.StudentService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExamResultConverterImpl implements ExamResultConverter {
 
-    private final ExamConverter examConverter;
-    private final StudentConverter studentConverter;
+    private final ExamService examService;
+    private final StudentService studentService;
 
-    public ExamResultConverterImpl(final ExamConverter examConverter,
-                                   final StudentConverter studentConverter) {
-        this.examConverter = examConverter;
-        this.studentConverter = studentConverter;
+    public ExamResultConverterImpl(final ExamService examService,
+                                   final StudentService studentService) {
+        this.examService = examService;
+        this.studentService = studentService;
     }
 
     @Override
     public ExamResultDTO toDto(ExamResult from) {
         ExamResultDTO to = new ExamResultDTO();
         to.setId(from.getId());
-        to.setExam(examConverter.toDto(from.getExam()));
-        to.setStudent(studentConverter.toDto(from.getStudent()));
+        to.setExamId(from.getExam().getId());
+        to.setStudentId(from.getStudent().getId());
         to.setAnswers(from.getAnswers());
         to.setScore(from.getScore());
         to.setLoginDate(from.getLoginDate());
@@ -35,8 +35,8 @@ public class ExamResultConverterImpl implements ExamResultConverter {
     public ExamResult toModel(ExamResultDTO from) {
         ExamResult to = new ExamResult();
         to.setId(from.getId());
-        to.setExam(examConverter.toModel(from.getExam()));
-        to.setStudent(studentConverter.toModel(from.getStudent()));
+        to.setExam(examService.getById(from.getExamId()));
+        to.setStudent(studentService.getById(from.getStudentId()));
         to.setAnswers(from.getAnswers());
         to.setScore(from.getScore());
         to.setLoginDate(from.getLoginDate());
