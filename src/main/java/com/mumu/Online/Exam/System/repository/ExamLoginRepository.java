@@ -1,6 +1,6 @@
 package com.mumu.Online.Exam.System.repository;
 
-import com.mumu.Online.Exam.System.model.entity.Question;
+import com.mumu.Online.Exam.System.model.entity.ExamLogin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Long> {
-    Page<Question> findAll(Specification<Question> spec, Pageable pageable);
+public interface ExamLoginRepository extends JpaRepository<ExamLogin, Long> {
 
-    Optional<Question> findByCustomerAndId(String customer, Long id);
+    Page<ExamLogin> findAll(Specification<ExamLogin> spec, Pageable pageable);
 
+    Optional<ExamLogin> findByCustomerAndId(String customer, Long id);
 }

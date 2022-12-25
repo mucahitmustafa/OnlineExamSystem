@@ -7,14 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Page<Student> findAll(Specification<Student> spec, Pageable pageRequest);
-
-    List<Student> findAllByCustomer(String customer);
 
     Optional<Student> findByCustomerAndId(String customer, Long id);
 

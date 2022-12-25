@@ -14,7 +14,7 @@ public class ExamLoginConverterImpl implements ExamLoginConverter {
     private final StudentService studentService;
 
     public ExamLoginConverterImpl(final ExamService examService,
-                                   final StudentService studentService) {
+                                  final StudentService studentService) {
         this.examService = examService;
         this.studentService = studentService;
     }
