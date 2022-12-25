@@ -5,12 +5,10 @@ import com.mumu.Online.Exam.System.converter.QuestionConverter;
 import com.mumu.Online.Exam.System.model.dto.QuestionDTO;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.service.QuestionService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/questions")
@@ -25,8 +23,14 @@ public class QuestionController extends AbstractController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<QuestionDTO> getAll(@RequestHeader("api-key") final String apiKey) {
-        return questionService.getAll(apiKey).stream().map(questionConverter::toDto).collect(Collectors.toList());
+    public Page<QuestionDTO> getAll(@RequestHeader("api-key") final String apiKey,
+                                    @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                    @RequestParam(value = "filters[]", required = false) String[] filters,
+                                    @RequestParam(value = "sort", required = false) String sort) {
+        if (pageNumber == null || pageNumber < 0) pageNumber = 1;
+        if (filters == null) filters = new String[0];
+        return questionService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(questionConverter::toDto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

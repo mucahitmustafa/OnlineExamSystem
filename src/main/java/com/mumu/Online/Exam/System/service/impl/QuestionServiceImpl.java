@@ -1,14 +1,21 @@
 package com.mumu.Online.Exam.System.service.impl;
 
+import com.mumu.Online.Exam.System.builder.QuestionSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.QuestionNotFoundException;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.QuestionRepository;
 import com.mumu.Online.Exam.System.service.QuestionService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
+import com.mumu.Online.Exam.System.utils.RegexUtil;
+import com.mumu.Online.Exam.System.utils.SortUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.regex.Matcher;
 
 @Service
 public class QuestionServiceImpl extends AbstractService implements QuestionService {
@@ -20,9 +27,14 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
     }
 
     @Override
-    public List<Question> getAll(String apiKey) {
+    public Page<Question> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort) {
         final String customer = ApiKeyUtil.decode(apiKey);
-        return questionRepository.findAllByCustomer(customer);
+
+        Sort sortModel = SortUtil.createSortModel(sort, DEFAULT_SORT_DIRECTION);
+        Specification<Question> spec = getSpecification(customer, filters);
+        if (pageSize == null || pageSize <= 0) pageSize = DEFAULT_PAGE_SIZE;
+        PageRequest pageRequest = PageRequest.of(Math.max(pageNumber - 1, 0), pageSize, sortModel);
+        return questionRepository.findAll(spec, pageRequest);
     }
 
     @Override
@@ -51,5 +63,23 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
         final String customer = ApiKeyUtil.decode(apiKey);
         question.setCustomer(customer);
         return questionRepository.save(question);
+    }
+
+    private Specification<Question> getSpecification(String customer, String[] filters) {
+        QuestionSpecificationBuilder builder = new QuestionSpecificationBuilder();
+
+        for (String filter : filters) {
+            if (filter.equals("")) continue;
+            Matcher matcher = RegexUtil.getFilterMatcher(filter);
+            boolean result = matcher.find();
+            if (result) {
+                String key = matcher.group(1);
+                String operator = matcher.group(2);
+                Object value = matcher.group(3);
+                builder.with(key, operator, value);
+            }
+        }
+        builder.with("customer", "Equal", customer);
+        return builder.build();
     }
 }

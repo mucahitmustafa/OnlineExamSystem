@@ -1,11 +1,10 @@
 package com.mumu.Online.Exam.System.service;
 
 import com.mumu.Online.Exam.System.model.entity.Question;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface QuestionService {
-    List<Question> getAll(String apiKey);
+    Page<Question> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
     Question validate(String apiKey, Long id);
 

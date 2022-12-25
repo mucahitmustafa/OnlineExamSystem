@@ -1,12 +1,11 @@
 package com.mumu.Online.Exam.System.service;
 
 import com.mumu.Online.Exam.System.model.entity.StudentGroup;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 
 public interface StudentGroupService {
-    List<StudentGroup> getAll(String apiKey);
+    Page<StudentGroup> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
     StudentGroup validate(String apiKey, Long id);
 

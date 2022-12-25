@@ -5,12 +5,10 @@ import com.mumu.Online.Exam.System.converter.StudentConverter;
 import com.mumu.Online.Exam.System.model.dto.StudentDTO;
 import com.mumu.Online.Exam.System.model.entity.Student;
 import com.mumu.Online.Exam.System.service.StudentService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/students")
@@ -25,8 +23,14 @@ public class StudentController extends AbstractController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<StudentDTO> getAll(@RequestHeader("api-key") final String apiKey) {
-        return studentService.getAll(apiKey).stream().map(studentConverter::toDto).collect(Collectors.toList());
+    public Page<StudentDTO> getAll(@RequestHeader("api-key") final String apiKey,
+                                   @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                   @RequestParam(value = "filters[]", required = false) String[] filters,
+                                   @RequestParam(value = "sort", required = false) String sort) {
+        if (pageNumber == null || pageNumber < 0) pageNumber = 1;
+        if (filters == null) filters = new String[0];
+        return studentService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(studentConverter::toDto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
