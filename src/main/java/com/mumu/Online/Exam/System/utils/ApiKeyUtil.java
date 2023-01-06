@@ -49,7 +49,7 @@ public class ApiKeyUtil {
     }
 
     public static String decode(String apiKey) {
-        return "MUMU";
+        return apiKey;
     /*    byte[] data = Base64.getDecoder().decode(apiKey.getBytes());
         try {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(PRIVATE_KEY.getBytes()));

@@ -15,4 +15,6 @@ public interface StudentService {
     Student create(String apiKey, Student student);
 
     Student getById(Long studentId);
+
+    Student login(String username, String password);
 }

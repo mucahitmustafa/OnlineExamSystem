@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 @Service
@@ -53,8 +55,11 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
     @Override
     public Question update(String apiKey, Question question) {
         final String customer = ApiKeyUtil.decode(apiKey);
-        questionRepository.findByCustomerAndId(customer, question.getId()).orElseThrow(QuestionNotFoundException::new);
+        Question originalQuestion = questionRepository.findByCustomerAndId(customer, question.getId())
+                .orElseThrow(QuestionNotFoundException::new);
         question.setCustomer(customer);
+        question.setCreated(originalQuestion.getCreated());
+        question.setUpdated(new Date());
         return questionRepository.save(question);
     }
 
@@ -62,7 +67,14 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
     public Question create(String apiKey, Question question) {
         final String customer = ApiKeyUtil.decode(apiKey);
         question.setCustomer(customer);
+        question.setCreated(new Date());
+        question.setUpdated(new Date());
         return questionRepository.save(question);
+    }
+
+    @Override
+    public List<Question> getByExam(Long examId) {
+        return questionRepository.findByExamId(examId);
     }
 
     private Specification<Question> getSpecification(String customer, String[] filters) {

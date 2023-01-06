@@ -12,6 +12,6 @@ public class BaseModel {
     protected String customer;
     protected Date created;
     protected Date updated;
-    protected boolean deleted;
+    protected boolean deleted = false;
 
 }

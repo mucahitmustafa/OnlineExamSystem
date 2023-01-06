@@ -9,6 +9,7 @@ import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -32,6 +33,8 @@ public class FoundationServiceImpl extends AbstractService implements Foundation
         if (!Objects.equals(original.getId(), foundation.getId())) {
             throw new BadRequestException("The foundation ID is not matched!");
         }
+        foundation.setCreated(original.getCreated());
+        foundation.setUpdated(new Date());
         return foundationRepository.save(foundation);
     }
 

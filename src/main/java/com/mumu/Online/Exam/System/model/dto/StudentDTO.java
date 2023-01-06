@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,11 +14,8 @@ public class StudentDTO implements Serializable {
 
     private Long id;
     private String number;
-    private Long groupId;
     private String name;
     private String mail;
     private String password;
-    private boolean blocked;
-    private Date lastLoginDate;
 
 }

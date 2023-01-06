@@ -20,14 +20,16 @@ public class FoundationController extends AbstractController {
         this.foundationService = foundationService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public FoundationDTO get(@RequestHeader("api-key") final String apiKey) {
         return foundationConverter.toDto(foundationService.validate(apiKey));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public FoundationDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody FoundationDTO changedDto) {
+    public FoundationDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
+                                @RequestBody FoundationDTO changedDto) {
         Foundation foundation = foundationConverter.toModel(changedDto);
+        foundation.setId(id);
         return foundationConverter.toDto(foundationService.update(apiKey, foundation));
     }
 

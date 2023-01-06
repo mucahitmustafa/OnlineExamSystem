@@ -3,6 +3,7 @@ package com.mumu.Online.Exam.System.controller;
 import com.mumu.Online.Exam.System.controller.base.AbstractController;
 import com.mumu.Online.Exam.System.converter.StudentConverter;
 import com.mumu.Online.Exam.System.model.dto.StudentDTO;
+import com.mumu.Online.Exam.System.model.dto.StudentLoginDTO;
 import com.mumu.Online.Exam.System.model.entity.Student;
 import com.mumu.Online.Exam.System.service.StudentService;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ public class StudentController extends AbstractController {
         this.studentService = studentService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public Page<StudentDTO> getAll(@RequestHeader("api-key") final String apiKey,
                                    @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -39,21 +40,28 @@ public class StudentController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
+    public ResponseEntity<Void> delete(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
         studentService.delete(apiKey, id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public StudentDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody StudentDTO changedDto) {
+    public StudentDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
+                             @RequestBody StudentDTO changedDto) {
         Student student = studentConverter.toModel(changedDto);
+        student.setId(id);
         return studentConverter.toDto(studentService.update(apiKey, student));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public StudentDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody StudentDTO createdDto) {
         Student student = studentConverter.toModel(createdDto);
         return studentConverter.toDto(studentService.create(apiKey, student));
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public StudentDTO login(@RequestBody StudentLoginDTO loginDTO) {
+        return studentConverter.toDto(studentService.login(loginDTO.getMail(), loginDTO.getPassword()));
     }
 
 }

@@ -3,6 +3,8 @@ package com.mumu.Online.Exam.System.service;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface QuestionService {
     Page<Question> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
@@ -13,4 +15,6 @@ public interface QuestionService {
     Question update(String apiKey, Question question);
 
     Question create(String apiKey, Question question);
+
+    List<Question> getByExam(Long examId);
 }

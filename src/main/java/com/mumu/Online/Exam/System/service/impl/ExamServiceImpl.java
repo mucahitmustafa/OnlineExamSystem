@@ -3,7 +3,9 @@ package com.mumu.Online.Exam.System.service.impl;
 import com.mumu.Online.Exam.System.builder.ExamSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.ExamNotFoundException;
 import com.mumu.Online.Exam.System.model.entity.Exam;
+import com.mumu.Online.Exam.System.model.entity.ExamLogin;
 import com.mumu.Online.Exam.System.repository.ExamRepository;
+import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.ExamService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
@@ -15,15 +17,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamServiceImpl extends AbstractService implements ExamService {
 
     private final ExamRepository examRepository;
+    private final ExamLoginService examLoginService;
 
-    public ExamServiceImpl(final ExamRepository examRepository) {
+    public ExamServiceImpl(final ExamRepository examRepository, final ExamLoginService examLoginService) {
         this.examRepository = examRepository;
+        this.examLoginService = examLoginService;
     }
 
     @Override
@@ -53,8 +60,11 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     @Override
     public Exam update(String apiKey, Exam exam) {
         final String customer = ApiKeyUtil.decode(apiKey);
-        examRepository.findByCustomerAndId(customer, exam.getId()).orElseThrow(ExamNotFoundException::new);
+        Exam originalExam = examRepository.findByCustomerAndId(customer, exam.getId())
+                .orElseThrow(ExamNotFoundException::new);
         exam.setCustomer(customer);
+        exam.setCreated(originalExam.getCreated());
+        exam.setUpdated(new Date());
         return examRepository.save(exam);
     }
 
@@ -62,12 +72,25 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     public Exam create(String apiKey, Exam exam) {
         final String customer = ApiKeyUtil.decode(apiKey);
         exam.setCustomer(customer);
+        exam.setCreated(new Date());
+        exam.setUpdated(new Date());
         return examRepository.save(exam);
     }
 
     @Override
     public Exam getById(Long examId) {
         return examRepository.findById(examId).orElseThrow(ExamNotFoundException::new);
+    }
+
+    @Override
+    public List<Exam> getUncompletedExamsAllByStudent(Long studentId) {
+        return examRepository.findByStudent(studentId);
+       /* return examRepository.findByStudent(studentId).stream()
+                .filter(exam -> {
+                    ExamLogin examLogin = examLoginService.getByStudentAndExam(studentId, exam.getId());
+                    return examLogin == null || examLogin.getLoginDate() == null;
+                })
+                .collect(Collectors.toList());*/
     }
 
     private Specification<Exam> getSpecification(String customer, String[] filters) {

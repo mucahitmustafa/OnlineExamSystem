@@ -9,9 +9,9 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class StudentGroupDTO implements Serializable {
+public class StudentLoginDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private String name;
+    private String mail;
+    private String password;
 }

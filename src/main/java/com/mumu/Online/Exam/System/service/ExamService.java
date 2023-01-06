@@ -17,4 +17,6 @@ public interface ExamService {
     Exam create(String apiKey, Exam exam);
 
     Exam getById(Long examId);
+
+    List<Exam> getUncompletedExamsAllByStudent(Long studentId);
 }

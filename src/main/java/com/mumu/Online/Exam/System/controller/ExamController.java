@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(value = "/exams")
 public class ExamController extends AbstractController {
@@ -22,7 +25,7 @@ public class ExamController extends AbstractController {
         this.examService = examService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public Page<ExamDTO> getAll(@RequestHeader("api-key") final String apiKey,
                                 @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                 @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -31,6 +34,12 @@ public class ExamController extends AbstractController {
         if (pageNumber == null || pageNumber < 0) pageNumber = 1;
         if (filters == null) filters = new String[0];
         return examService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(examConverter::toDto);
+    }
+
+    @RequestMapping(value = "/byStudent/{studentId}", method = RequestMethod.GET)
+    public List<ExamDTO> getAllByStudent(@PathVariable("studentId") final Long studentId) {
+        return examService.getUncompletedExamsAllByStudent(studentId).stream().map(examConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -45,12 +54,14 @@ public class ExamController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ExamDTO update(@RequestHeader("api-key") final String apiKey, @RequestBody ExamDTO changedDto) {
+    public ExamDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
+                          @RequestBody ExamDTO changedDto) {
         Exam exam = examConverter.toModel(changedDto);
+        exam.setId(id);
         return examConverter.toDto(examService.update(apiKey, exam));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ExamDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExamDTO createdDto) {
         Exam exam = examConverter.toModel(createdDto);
         return examConverter.toDto(examService.create(apiKey, exam));

@@ -15,6 +15,7 @@ public class Question extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private Long id;
 
     @ManyToOne

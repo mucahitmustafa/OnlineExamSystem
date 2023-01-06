@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 @Service
@@ -47,12 +49,24 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
     public ExamLogin create(String apiKey, ExamLogin examLogin) {
         final String customer = ApiKeyUtil.decode(apiKey);
         examLogin.setCustomer(customer);
+        examLogin.setCreated(new Date());
+        examLogin.setUpdated(new Date());
         return examLoginRepository.save(examLogin);
     }
 
     @Override
     public ExamLogin getById(Long examLoginId) {
         return examLoginRepository.findById(examLoginId).orElseThrow(ExamLoginNotFoundException::new);
+    }
+
+    @Override
+    public List<ExamLogin> getAllByStudent(Long studentId) {
+        return examLoginRepository.findByStudent_Id(studentId);
+    }
+
+    @Override
+    public ExamLogin getByStudentAndExam(Long studentId, Long examId) {
+        return examLoginRepository.findByStudent_IdAndExam_Id(studentId, examId);
     }
 
     private Specification<ExamLogin> getSpecification(String customer, String[] filters) {

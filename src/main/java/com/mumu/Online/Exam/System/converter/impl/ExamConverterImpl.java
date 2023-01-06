@@ -22,6 +22,7 @@ public class ExamConverterImpl implements ExamConverter {
     public ExamDTO toDto(Exam from) {
         ExamDTO to = new ExamDTO();
         to.setId(from.getId());
+        to.setName(from.getName());
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
         to.setDuration(from.getDuration());
@@ -33,6 +34,7 @@ public class ExamConverterImpl implements ExamConverter {
     public Exam toModel(ExamDTO from) {
         Exam to = new Exam();
         to.setId(from.getId());
+        to.setName(from.getName());
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
         to.setDuration(from.getDuration());
