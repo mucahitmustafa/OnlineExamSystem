@@ -16,7 +16,6 @@ public class ExamConverterImpl implements ExamConverter {
         to.setName(from.getName());
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
-        to.setDuration(from.getDuration());
         return to;
     }
 
@@ -27,7 +26,6 @@ public class ExamConverterImpl implements ExamConverter {
         to.setName(from.getName());
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
-        to.setDuration(from.getDuration());
         return to;
     }
 
@@ -38,7 +36,6 @@ public class ExamConverterImpl implements ExamConverter {
         to.setName(from.getName());
         to.setStartDate(from.getStartDate());
         to.setEndDate(from.getEndDate());
-        to.setDuration(from.getDuration());
         return to;
     }
 }

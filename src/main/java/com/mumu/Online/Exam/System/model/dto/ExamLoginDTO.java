@@ -14,11 +14,12 @@ public class ExamLoginDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private Long examId; // TODO name
-    private Long studentId;  // TODO name
+    private Long examId;
+    private String examName;
+    private Long studentId;
+    private String studentName;
     private String answers;
     private float score;
     private Date loginDate;
-    private Long duration;
 
 }

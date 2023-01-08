@@ -3,8 +3,10 @@ package com.mumu.Online.Exam.System.service.impl;
 import com.mumu.Online.Exam.System.builder.ExamLoginSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.ExamLoginNotFoundException;
 import com.mumu.Online.Exam.System.model.entity.ExamLogin;
+import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamLoginRepository;
 import com.mumu.Online.Exam.System.service.ExamLoginService;
+import com.mumu.Online.Exam.System.service.QuestionService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
 import com.mumu.Online.Exam.System.utils.RegexUtil;
@@ -15,17 +17,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 
 @Service
 public class ExamLoginServiceImpl extends AbstractService implements ExamLoginService {
 
     private final ExamLoginRepository examLoginRepository;
+    private final QuestionService questionService;
 
-    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository) {
+    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository, final QuestionService questionService) {
         this.examLoginRepository = examLoginRepository;
+        this.questionService = questionService;
     }
 
     @Override
@@ -51,6 +54,19 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
         examLogin.setCustomer(customer);
         examLogin.setCreated(new Date());
         examLogin.setUpdated(new Date());
+
+        String[] answers = examLogin.getAnswers().split(",");
+        Long examId = examLogin.getExam().getId();
+        List<Question> questions = questionService.getByExam(examId);
+        int score = 0;
+        for (int i = 0; i < questions.size(); i++) {
+            Question q = questions.get(i);
+            String answer = answers[i];
+            if (Objects.equals(answer, Arrays.asList("A", "B", "C", "D").get(q.getCorrectAnswerIndex()))) {
+                score += 100 / questions.size();
+            }
+        }
+        examLogin.setScore(Math.min(score, 100));
         return examLoginRepository.save(examLogin);
     }
 

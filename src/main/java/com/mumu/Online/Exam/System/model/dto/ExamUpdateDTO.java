@@ -18,7 +18,6 @@ public class ExamUpdateDTO implements Serializable {
     private String name;
     private Date startDate;
     private Date endDate;
-    private Long duration;
     private List<QuestionDTO> questions;
 
 }

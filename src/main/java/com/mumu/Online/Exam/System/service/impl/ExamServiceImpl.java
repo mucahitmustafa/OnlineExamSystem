@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamServiceImpl extends AbstractService implements ExamService {
@@ -89,7 +90,10 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
 
     @Override
     public List<Exam> getUncompletedExamsAllByStudent(Long studentId) {
-        return examRepository.findExamsTheStudentHasNotTaken(studentId);
+        List<Exam> exams = examRepository.findExamsTheStudentHasNotTaken(studentId);
+        return exams;
+      /*  return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
+                exam.getStartDate().before(new Date())).collect(Collectors.toList());*/
     }
 
     private Specification<Exam> getSpecification(String customer, String[] filters) {

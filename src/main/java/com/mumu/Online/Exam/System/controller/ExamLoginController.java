@@ -8,6 +8,7 @@ import com.mumu.Online.Exam.System.service.ExamLoginService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class ExamLoginController extends AbstractController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ExamLoginDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExamLoginDTO createdDto) {
+        createdDto.setLoginDate(new Date());
         ExamLogin examLogin = examLoginConverter.toModel(createdDto);
         return examLoginConverter.toDto(examLoginService.create(apiKey, examLogin));
     }

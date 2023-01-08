@@ -29,7 +29,6 @@ CREATE TABLE exam
     created     TIMESTAMP(3) NOT NULL,
     updated     TIMESTAMP(3) NOT NULL,
     deleted     BOOLEAN      NOT NULL,
-    duration    BIGINT,
     start_date  TIMESTAMP(3) NOT NULL,
     end_date    TIMESTAMP(3) NOT NULL
 );
@@ -61,8 +60,7 @@ CREATE TABLE exam_login
     student_id BIGINT           NOT NULL,
     answers    VARCHAR(255)     NOT NULL,
     score      DOUBLE PRECISION NOT NULL,
-    login_date TIMESTAMP(3)     NOT NULL,
-    duration    BIGINT
+    login_date TIMESTAMP(3)     NOT NULL
 );
 
 ALTER TABLE exam_login

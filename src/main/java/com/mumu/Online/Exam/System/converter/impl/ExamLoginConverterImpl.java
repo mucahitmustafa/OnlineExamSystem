@@ -24,7 +24,9 @@ public class ExamLoginConverterImpl implements ExamLoginConverter {
         ExamLoginDTO to = new ExamLoginDTO();
         to.setId(from.getId());
         to.setExamId(from.getExam().getId());
+        to.setExamName(from.getExam().getName());
         to.setStudentId(from.getStudent().getId());
+        to.setStudentName(from.getStudent().getName());
         to.setAnswers(from.getAnswers());
         to.setScore(from.getScore());
         to.setLoginDate(from.getLoginDate());

@@ -18,6 +18,5 @@ public class ExamDTO implements Serializable {
     private String name;
     private Date startDate;
     private Date endDate;
-    private Long duration;
 
 }

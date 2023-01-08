@@ -26,6 +26,4 @@ public class Exam extends BaseModel {
 
     private Date endDate;
 
-    private Long duration;
-
 }

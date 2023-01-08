@@ -30,6 +30,5 @@ public class ExamLogin extends BaseModel {
     private float score;
 
     private Date loginDate;
-    private Long duration;
 
 }
