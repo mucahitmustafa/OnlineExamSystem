@@ -16,10 +16,8 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
 
     Page<Exam> findAll(Specification<Exam> spec, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM exam e WHERE id in (SELECT es.exam_id FROM exam_students es WHERE es.student_id = ?1)")
-    List<Exam> findByStudent(Long studentId);
+    @Query(nativeQuery = true, value = "SELECT * FROM exam e WHERE id not in (SELECT el.exam_id FROM exam_login el WHERE el.student_id = ?1)")
+    List<Exam> findExamsTheStudentHasNotTaken(Long studentId);
 
     Optional<Exam> findByCustomerAndId(String customer, Long id);
-
-    void deleteByCustomerAndId(String customer, Long id);
 }

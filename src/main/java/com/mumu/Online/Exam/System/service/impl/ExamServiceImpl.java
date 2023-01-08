@@ -3,10 +3,10 @@ package com.mumu.Online.Exam.System.service.impl;
 import com.mumu.Online.Exam.System.builder.ExamSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.ExamNotFoundException;
 import com.mumu.Online.Exam.System.model.entity.Exam;
-import com.mumu.Online.Exam.System.model.entity.ExamLogin;
+import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamRepository;
-import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.ExamService;
+import com.mumu.Online.Exam.System.service.QuestionService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
 import com.mumu.Online.Exam.System.utils.RegexUtil;
@@ -20,17 +20,16 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 @Service
 public class ExamServiceImpl extends AbstractService implements ExamService {
 
     private final ExamRepository examRepository;
-    private final ExamLoginService examLoginService;
+    private final QuestionService questionService;
 
-    public ExamServiceImpl(final ExamRepository examRepository, final ExamLoginService examLoginService) {
+    public ExamServiceImpl(final ExamRepository examRepository, final QuestionService questionService) {
         this.examRepository = examRepository;
-        this.examLoginService = examLoginService;
+        this.questionService = questionService;
     }
 
     @Override
@@ -58,14 +57,20 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     }
 
     @Override
-    public Exam update(String apiKey, Exam exam) {
+    public Exam update(String apiKey, Exam exam, List<Question> questions) {
         final String customer = ApiKeyUtil.decode(apiKey);
         Exam originalExam = examRepository.findByCustomerAndId(customer, exam.getId())
                 .orElseThrow(ExamNotFoundException::new);
         exam.setCustomer(customer);
         exam.setCreated(originalExam.getCreated());
         exam.setUpdated(new Date());
-        return examRepository.save(exam);
+        Exam savedExam = examRepository.save(exam);
+        questionService.deleteByExamId(savedExam.getId());
+        questions.forEach(question -> {
+            question.setExam(savedExam);
+            questionService.create(apiKey, question);
+        });
+        return savedExam;
     }
 
     @Override
@@ -84,13 +89,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
 
     @Override
     public List<Exam> getUncompletedExamsAllByStudent(Long studentId) {
-        return examRepository.findByStudent(studentId);
-       /* return examRepository.findByStudent(studentId).stream()
-                .filter(exam -> {
-                    ExamLogin examLogin = examLoginService.getByStudentAndExam(studentId, exam.getId());
-                    return examLogin == null || examLogin.getLoginDate() == null;
-                })
-                .collect(Collectors.toList());*/
+        return examRepository.findExamsTheStudentHasNotTaken(studentId);
     }
 
     private Specification<Exam> getSpecification(String customer, String[] filters) {
@@ -107,7 +106,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
                 builder.with(key, operator, value);
             }
         }
-        builder.with("customer", "Equal", customer);
+        builder.with("customer", "#Equal#", customer);
         return builder.build();
     }
 }

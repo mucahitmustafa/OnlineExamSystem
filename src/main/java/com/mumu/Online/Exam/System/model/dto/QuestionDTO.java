@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,6 +16,6 @@ public class QuestionDTO implements Serializable {
     private Long id;
     private Long examId;
     private String text;
-    private String answers;
+    private List<String> answers;
     private int correctAnswerIndex;
 }

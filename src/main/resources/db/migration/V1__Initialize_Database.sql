@@ -71,18 +71,6 @@ ALTER TABLE exam_login
 ALTER TABLE exam_login
     ADD CONSTRAINT FK_EXAM_LOGIN_STUDENT_ID FOREIGN KEY (student_id) REFERENCES student (id);
 
-CREATE TABLE exam_students
-(
-    student_id BIGINT NOT NULL,
-    exam_id    BIGINT NOT NULL
-);
-
-ALTER TABLE exam_students
-    ADD CONSTRAINT FK_EXAM_STUDENTS_STUDENT_ID FOREIGN KEY (student_id) REFERENCES student (id);
-
-ALTER TABLE exam_students
-    ADD CONSTRAINT FK_EXAM_STUDENTS_EXAM_ID FOREIGN KEY (exam_id) REFERENCES exam (id);
-
 CREATE TABLE foundation_student
 (
     foundation_id BIGINT NOT NULL,

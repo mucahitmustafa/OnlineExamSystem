@@ -17,4 +17,6 @@ public interface QuestionService {
     Question create(String apiKey, Question question);
 
     List<Question> getByExam(Long examId);
+
+    void deleteByExamId(Long examId);
 }

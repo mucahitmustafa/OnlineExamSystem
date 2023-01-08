@@ -2,8 +2,12 @@ package com.mumu.Online.Exam.System.controller;
 
 import com.mumu.Online.Exam.System.controller.base.AbstractController;
 import com.mumu.Online.Exam.System.converter.ExamConverter;
+import com.mumu.Online.Exam.System.converter.QuestionConverter;
 import com.mumu.Online.Exam.System.model.dto.ExamDTO;
+import com.mumu.Online.Exam.System.model.dto.ExamUpdateDTO;
+import com.mumu.Online.Exam.System.model.dto.QuestionDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
+import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.service.ExamService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,12 +21,15 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/exams")
 public class ExamController extends AbstractController {
 
-    private final ExamConverter examConverter;
     private final ExamService examService;
+    private final ExamConverter examConverter;
+    private final QuestionConverter questionConverter;
 
-    public ExamController(final ExamConverter examConverter, final ExamService examService) {
-        this.examConverter = examConverter;
+    public ExamController(final ExamService examService, final ExamConverter examConverter,
+                          final QuestionConverter questionConverter) {
         this.examService = examService;
+        this.examConverter = examConverter;
+        this.questionConverter = questionConverter;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -55,10 +62,12 @@ public class ExamController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ExamDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
-                          @RequestBody ExamDTO changedDto) {
-        Exam exam = examConverter.toModel(changedDto);
+                          @RequestBody ExamUpdateDTO changedDto) {
+        Exam exam = examConverter.toModelForUpdate(changedDto);
+        List<Question> questions = changedDto.getQuestions().stream().map(questionConverter::toModelForCreate)
+                .collect(Collectors.toList());
         exam.setId(id);
-        return examConverter.toDto(examService.update(apiKey, exam));
+        return examConverter.toDto(examService.update(apiKey, exam, questions));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)

@@ -11,7 +11,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class ExamDTO implements Serializable {
+public class ExamUpdateDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -19,5 +19,6 @@ public class ExamDTO implements Serializable {
     private Date startDate;
     private Date endDate;
     private Long duration;
+    private List<QuestionDTO> questions;
 
 }

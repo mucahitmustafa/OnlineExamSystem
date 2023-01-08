@@ -37,7 +37,7 @@ public class QuestionController extends AbstractController {
     }
 
     @RequestMapping(value = "/byExam/{examId}", method = RequestMethod.GET)
-    public List<QuestionDTO> getAllByStudent(@PathVariable("examId") final Long examId) {
+    public List<QuestionDTO> getAllByExam(@PathVariable("examId") final Long examId) {
         return questionService.getByExam(examId).stream().map(questionConverter::toDto).collect(Collectors.toList());
     }
 

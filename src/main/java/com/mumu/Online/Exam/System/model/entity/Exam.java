@@ -28,11 +28,4 @@ public class Exam extends BaseModel {
 
     private Long duration;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "exam_students",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "exam_id"))
-    private List<Student> students;
-
 }
