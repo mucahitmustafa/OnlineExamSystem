@@ -10,7 +10,7 @@ public interface ExamLoginService {
 
     ExamLogin validate(String apiKey, Long id);
 
-    ExamLogin create(String apiKey, ExamLogin exam);
+    ExamLogin create(ExamLogin exam);
 
     ExamLogin getById(Long examId);
 

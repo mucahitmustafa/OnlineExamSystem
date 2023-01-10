@@ -47,9 +47,9 @@ public class ExamLoginController extends AbstractController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ExamLoginDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExamLoginDTO createdDto) {
+    public ExamLoginDTO create(@RequestBody ExamLoginDTO createdDto) {
         createdDto.setLoginDate(new Date());
         ExamLogin examLogin = examLoginConverter.toModel(createdDto);
-        return examLoginConverter.toDto(examLoginService.create(apiKey, examLogin));
+        return examLoginConverter.toDto(examLoginService.create(examLogin));
     }
 }

@@ -7,6 +7,7 @@ import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamLoginRepository;
 import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.QuestionService;
+import com.mumu.Online.Exam.System.service.StudentService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
 import com.mumu.Online.Exam.System.utils.RegexUtil;
@@ -25,10 +26,13 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
 
     private final ExamLoginRepository examLoginRepository;
     private final QuestionService questionService;
+    private final StudentService studentService;
 
-    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository, final QuestionService questionService) {
+    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository, final QuestionService questionService,
+                                final StudentService studentService) {
         this.examLoginRepository = examLoginRepository;
         this.questionService = questionService;
+        this.studentService = studentService;
     }
 
     @Override
@@ -49,9 +53,8 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
     }
 
     @Override
-    public ExamLogin create(String apiKey, ExamLogin examLogin) {
-        final String customer = ApiKeyUtil.decode(apiKey);
-        examLogin.setCustomer(customer);
+    public ExamLogin create(ExamLogin examLogin) {
+        examLogin.setCustomer(examLogin.getStudent().getCustomer());
         examLogin.setCreated(new Date());
         examLogin.setUpdated(new Date());
 
