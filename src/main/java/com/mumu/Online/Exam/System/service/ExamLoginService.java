@@ -12,9 +12,10 @@ public interface ExamLoginService {
 
     ExamLogin create(ExamLogin exam);
 
-    ExamLogin getById(Long examId);
-
     List<ExamLogin> getAllByStudent(Long studentId);
 
-    ExamLogin getByStudentAndExam(Long studentId, Long examId);
+    void deleteByStudentId(Long studentId);
+
+    void deleteByExamId(Long examId);
+
 }

@@ -7,7 +7,6 @@ import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamLoginRepository;
 import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.QuestionService;
-import com.mumu.Online.Exam.System.service.StudentService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
 import com.mumu.Online.Exam.System.utils.RegexUtil;
@@ -26,13 +25,10 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
 
     private final ExamLoginRepository examLoginRepository;
     private final QuestionService questionService;
-    private final StudentService studentService;
 
-    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository, final QuestionService questionService,
-                                final StudentService studentService) {
+    public ExamLoginServiceImpl(final ExamLoginRepository examLoginRepository, final QuestionService questionService) {
         this.examLoginRepository = examLoginRepository;
         this.questionService = questionService;
-        this.studentService = studentService;
     }
 
     @Override
@@ -74,18 +70,18 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
     }
 
     @Override
-    public ExamLogin getById(Long examLoginId) {
-        return examLoginRepository.findById(examLoginId).orElseThrow(ExamLoginNotFoundException::new);
-    }
-
-    @Override
     public List<ExamLogin> getAllByStudent(Long studentId) {
         return examLoginRepository.findByStudent_Id(studentId);
     }
 
     @Override
-    public ExamLogin getByStudentAndExam(Long studentId, Long examId) {
-        return examLoginRepository.findByStudent_IdAndExam_Id(studentId, examId);
+    public void deleteByStudentId(Long studentId) {
+        examLoginRepository.deleteByStudent_Id(studentId);
+    }
+
+    @Override
+    public void deleteByExamId(Long examId) {
+        examLoginRepository.deleteByExam_Id(examId);
     }
 
     private Specification<ExamLogin> getSpecification(String customer, String[] filters) {
@@ -102,7 +98,7 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
                 builder.with(key, operator, value);
             }
         }
-        builder.with("customer", "Equal", customer);
+        builder.with("customer", "#Equal#", customer);
         return builder.build();
     }
 }

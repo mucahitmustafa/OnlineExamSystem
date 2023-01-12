@@ -5,6 +5,7 @@ import com.mumu.Online.Exam.System.exception.StudentNotFoundException;
 import com.mumu.Online.Exam.System.exception.WrongMailOrPasswordException;
 import com.mumu.Online.Exam.System.model.entity.Student;
 import com.mumu.Online.Exam.System.repository.StudentRepository;
+import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.StudentService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
@@ -23,9 +24,11 @@ import java.util.regex.Matcher;
 public class StudentServiceImpl extends AbstractService implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final ExamLoginService examLoginService;
 
-    public StudentServiceImpl(final StudentRepository studentRepository) {
+    public StudentServiceImpl(final StudentRepository studentRepository, final ExamLoginService examLoginService) {
         this.studentRepository = studentRepository;
+        this.examLoginService = examLoginService;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
         final String customer = ApiKeyUtil.decode(apiKey);
         Student student = studentRepository.findByCustomerAndId(customer, id)
                 .orElseThrow(StudentNotFoundException::new);
+        examLoginService.deleteByStudentId(id);
         studentRepository.delete(student);
     }
 
@@ -97,7 +101,7 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
                 builder.with(key, operator, value);
             }
         }
-        builder.with("customer", "Equal", customer);
+        builder.with("customer", "#Equal#", customer);
         return builder.build();
     }
 }

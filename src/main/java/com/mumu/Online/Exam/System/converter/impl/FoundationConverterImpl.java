@@ -26,8 +26,6 @@ public class FoundationConverterImpl implements FoundationConverter {
         FoundationDTO to = new FoundationDTO();
         to.setId(from.getId());
         to.setName(from.getName());
-        to.setStudents(from.getStudents().stream().map(studentConverter::toDto).collect(Collectors.toList()));
-        to.setExams(from.getExams().stream().map(examConverter::toDto).collect(Collectors.toList()));
         return to;
     }
 
@@ -36,8 +34,6 @@ public class FoundationConverterImpl implements FoundationConverter {
         Foundation to = new Foundation();
         to.setId(from.getId());
         to.setName(from.getName());
-        to.setStudents(from.getStudents().stream().map(studentConverter::toModel).collect(Collectors.toList()));
-        to.setExams(from.getExams().stream().map(examConverter::toModel).collect(Collectors.toList()));
         return to;
     }
 }

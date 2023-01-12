@@ -5,6 +5,7 @@ import com.mumu.Online.Exam.System.exception.ExamNotFoundException;
 import com.mumu.Online.Exam.System.model.entity.Exam;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamRepository;
+import com.mumu.Online.Exam.System.service.ExamLoginService;
 import com.mumu.Online.Exam.System.service.ExamService;
 import com.mumu.Online.Exam.System.service.QuestionService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
@@ -27,10 +28,13 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
 
     private final ExamRepository examRepository;
     private final QuestionService questionService;
+    private final ExamLoginService examLoginService;
 
-    public ExamServiceImpl(final ExamRepository examRepository, final QuestionService questionService) {
+    public ExamServiceImpl(final ExamRepository examRepository, final QuestionService questionService,
+                           final ExamLoginService examLoginService) {
         this.examRepository = examRepository;
         this.questionService = questionService;
+        this.examLoginService = examLoginService;
     }
 
     @Override
@@ -54,6 +58,8 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     public void delete(String apiKey, Long id) {
         final String customer = ApiKeyUtil.decode(apiKey);
         Exam exam = examRepository.findByCustomerAndId(customer, id).orElseThrow(ExamNotFoundException::new);
+        questionService.deleteByExamId(id);
+        examLoginService.deleteByExamId(id);
         examRepository.delete(exam);
     }
 
@@ -91,9 +97,8 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     @Override
     public List<Exam> getUncompletedExamsAllByStudent(Long studentId) {
         List<Exam> exams = examRepository.findExamsTheStudentHasNotTaken(studentId);
-        return exams;
-      /*  return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
-                exam.getStartDate().before(new Date())).collect(Collectors.toList());*/
+        return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
+                exam.getStartDate().before(new Date())).collect(Collectors.toList());
     }
 
     private Specification<Exam> getSpecification(String customer, String[] filters) {

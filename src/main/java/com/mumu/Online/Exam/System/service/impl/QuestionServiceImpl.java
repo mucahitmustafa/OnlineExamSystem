@@ -96,7 +96,7 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
                 builder.with(key, operator, value);
             }
         }
-        builder.with("customer", "Equal", customer);
+        builder.with("customer", "#Equal#", customer);
         return builder.build();
     }
 }
