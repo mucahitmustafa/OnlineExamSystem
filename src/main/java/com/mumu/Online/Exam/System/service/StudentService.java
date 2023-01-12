@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 public interface StudentService {
     Page<Student> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
-    Student validate(String apiKey, Long id);
+    Student validate(Long id);
 
     void delete(String apiKey, Long id);
 

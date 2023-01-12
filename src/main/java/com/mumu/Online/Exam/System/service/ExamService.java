@@ -9,7 +9,7 @@ import java.util.List;
 public interface ExamService {
     Page<Exam> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
-    Exam validate(String apiKey, Long id);
+    Exam validate(Long id);
 
     void delete(String apiKey, Long id);
 

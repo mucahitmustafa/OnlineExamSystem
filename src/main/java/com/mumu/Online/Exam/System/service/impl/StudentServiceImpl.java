@@ -1,6 +1,7 @@
 package com.mumu.Online.Exam.System.service.impl;
 
 import com.mumu.Online.Exam.System.builder.StudentSpecificationBuilder;
+import com.mumu.Online.Exam.System.exception.StudentAlreadyExistException;
 import com.mumu.Online.Exam.System.exception.StudentNotFoundException;
 import com.mumu.Online.Exam.System.exception.WrongMailOrPasswordException;
 import com.mumu.Online.Exam.System.model.entity.Student;
@@ -43,9 +44,8 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
     }
 
     @Override
-    public Student validate(String apiKey, Long id) {
-        final String customer = ApiKeyUtil.decode(apiKey);
-        return studentRepository.findByCustomerAndId(customer, id).orElseThrow(StudentNotFoundException::new);
+    public Student validate(Long id) {
+        return studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
     }
 
     @Override
@@ -71,6 +71,9 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
     @Override
     public Student create(String apiKey, Student student) {
         final String customer = ApiKeyUtil.decode(apiKey);
+        if (studentRepository.existsByMail(student.getMail())) {
+            throw new StudentAlreadyExistException();
+        }
         student.setCustomer(customer);
         student.setCreated(new Date());
         student.setUpdated(new Date());

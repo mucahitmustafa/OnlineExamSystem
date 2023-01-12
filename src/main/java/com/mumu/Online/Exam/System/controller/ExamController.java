@@ -50,8 +50,8 @@ public class ExamController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ExamDTO get(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
-        return examConverter.toDto(examService.validate(apiKey, id));
+    public ExamDTO get(@PathVariable("id") final Long id) {
+        return examConverter.toDto(examService.validate(id));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -49,9 +49,8 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     }
 
     @Override
-    public Exam validate(String apiKey, Long id) {
-        final String customer = ApiKeyUtil.decode(apiKey);
-        return examRepository.findByCustomerAndId(customer, id).orElseThrow(ExamNotFoundException::new);
+    public Exam validate(Long id) {
+        return examRepository.findById(id).orElseThrow(ExamNotFoundException::new);
     }
 
     @Override

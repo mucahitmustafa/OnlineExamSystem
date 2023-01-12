@@ -35,8 +35,8 @@ public class StudentController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public StudentDTO get(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
-        return studentConverter.toDto(studentService.validate(apiKey, id));
+    public StudentDTO get(@PathVariable("id") final Long id) {
+        return studentConverter.toDto(studentService.validate(id));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
