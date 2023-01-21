@@ -101,7 +101,8 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     public List<Exam> getUncompletedExamsByStudent(Long studentId) {
         List<Exam> exams = examRepository.findExamsTheStudentHasNotTaken(studentId);
         return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
-                exam.getStartDate().before(new Date())).collect(Collectors.toList());
+                exam.getStartDate().before(new Date()) && questionService.countByExam(exam.getId()) > 0)
+                .collect(Collectors.toList());
     }
 
     @Override

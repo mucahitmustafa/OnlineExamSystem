@@ -87,6 +87,11 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
         return questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
     }
 
+    @Override
+    public int countByExam(Long examId) {
+        return questionRepository.countByExamId(examId);
+    }
+
     private Specification<Question> getSpecification(String customer, String[] filters) {
         QuestionSpecificationBuilder builder = new QuestionSpecificationBuilder();
 

@@ -21,4 +21,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByExamId(Long examId);
 
     void deleteByExamId(Long examId);
+
+    int countByExamId(Long examId);
 }

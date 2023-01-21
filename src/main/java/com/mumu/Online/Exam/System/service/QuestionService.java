@@ -21,4 +21,6 @@ public interface QuestionService {
     void deleteByExamId(Long examId);
 
     Question getById(Long questionId);
+
+    int countByExam(Long examId);
 }
