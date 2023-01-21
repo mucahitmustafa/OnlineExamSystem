@@ -1,0 +1,15 @@
+ALTER TABLE foundation
+    ADD COLUMN public_code VARCHAR(255) NOT NULL;
+ALTER TABLE student
+    ADD COLUMN verified BOOLEAN NOT NULL;
+ALTER TABLE question
+    ADD COLUMN index BIGINT NOT NULL;
+ALTER TABLE question
+    ADD COLUMN score INTEGER NOT NULL;
+
+ALTER TABLE exam_login
+    ADD COLUMN correct_answers VARCHAR(255) NOT NULL;
+ALTER TABLE exam_login
+    ADD COLUMN wrong_answers VARCHAR(255) NOT NULL;
+ALTER TABLE exam_login
+    ADD COLUMN blank_answers VARCHAR(255) NOT NULL;
