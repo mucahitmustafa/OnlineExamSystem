@@ -43,9 +43,8 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
     }
 
     @Override
-    public ExamLogin validate(String apiKey, Long id) {
-        final String customer = ApiKeyUtil.decode(apiKey);
-        return examLoginRepository.findByCustomerAndId(customer, id).orElseThrow(ExamLoginNotFoundException::new);
+    public ExamLogin validate(Long id) {
+        return examLoginRepository.findById(id).orElseThrow(ExamLoginNotFoundException::new);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
         examLogin.setBlankAnswers(String.join(",", blankAnswers));
         examLogin.setCorrectAnswers(String.join(",", correctAnswers));
         examLogin.setWrongAnswers(String.join(",", wrongAnswers));
-        examLogin.setScore(Math.min(score, 100));
+        examLogin.setScore((double) Math.min(score, 100));
         return examLoginRepository.save(examLogin);
     }
 
@@ -93,6 +92,11 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
     @Override
     public void deleteByExamId(Long examId) {
         examLoginRepository.deleteByExam_Id(examId);
+    }
+
+    @Override
+    public List<ExamLogin> getByExamId(Long examId) {
+        return examLoginRepository.findAllByExamId(examId);
     }
 
     private Specification<ExamLogin> getSpecification(String customer, String[] filters) {

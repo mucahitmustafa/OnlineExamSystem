@@ -19,4 +19,6 @@ public interface QuestionService {
     List<Question> getByExam(Long examId);
 
     void deleteByExamId(Long examId);
+
+    Question getById(Long questionId);
 }

@@ -4,6 +4,7 @@ import com.mumu.Online.Exam.System.controller.base.AbstractController;
 import com.mumu.Online.Exam.System.converter.ExamConverter;
 import com.mumu.Online.Exam.System.converter.QuestionConverter;
 import com.mumu.Online.Exam.System.model.dto.ExamDTO;
+import com.mumu.Online.Exam.System.model.dto.ExamStatisticDTO;
 import com.mumu.Online.Exam.System.model.dto.ExamUpdateDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
 import com.mumu.Online.Exam.System.model.entity.Question;
@@ -73,5 +74,10 @@ public class ExamController extends AbstractController {
     public ExamDTO create(@RequestHeader("api-key") final String apiKey, @RequestBody ExamDTO createdDto) {
         Exam exam = examConverter.toModel(createdDto);
         return examConverter.toDto(examService.create(apiKey, exam));
+    }
+
+    @RequestMapping(value = "/statistics/{id}", method = RequestMethod.GET)
+    public ExamStatisticDTO statistics(@PathVariable("id") final Long id) {
+        return examService.getStatistics(id);
     }
 }

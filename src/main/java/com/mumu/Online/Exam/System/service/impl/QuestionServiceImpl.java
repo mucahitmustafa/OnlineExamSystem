@@ -82,6 +82,11 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
         questionRepository.deleteByExamId(examId);
     }
 
+    @Override
+    public Question getById(Long questionId) {
+        return questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
+    }
+
     private Specification<Question> getSpecification(String customer, String[] filters) {
         QuestionSpecificationBuilder builder = new QuestionSpecificationBuilder();
 

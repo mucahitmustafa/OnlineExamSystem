@@ -24,4 +24,6 @@ public interface ExamLoginRepository extends JpaRepository<ExamLogin, Long> {
     void deleteByStudent_Id(Long studentId);
 
     void deleteByExam_Id(Long examId);
+
+    List<ExamLogin> findAllByExamId(Long examId);
 }

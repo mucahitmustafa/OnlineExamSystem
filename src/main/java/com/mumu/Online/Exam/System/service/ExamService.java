@@ -1,5 +1,6 @@
 package com.mumu.Online.Exam.System.service;
 
+import com.mumu.Online.Exam.System.model.dto.ExamStatisticDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,6 @@ public interface ExamService {
     Exam getById(Long examId);
 
     List<Exam> getUncompletedExamsByStudent(Long studentId);
+
+    ExamStatisticDTO getStatistics(Long id);
 }

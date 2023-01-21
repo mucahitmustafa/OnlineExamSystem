@@ -33,6 +33,9 @@ public class ExamLoginConverterImpl implements ExamLoginConverter {
         to.setBlankAnswerCount(from.getBlankAnswers().length());
         to.setCorrectAnswerCount(from.getCorrectAnswers().length());
         to.setWrongAnswerCount(from.getWrongAnswers().length());
+        to.setBlankAnswers(from.getBlankAnswers());
+        to.setCorrectAnswers(from.getCorrectAnswers());
+        to.setWrongAnswers(from.getWrongAnswers());
         return to;
     }
 

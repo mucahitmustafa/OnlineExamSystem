@@ -33,7 +33,7 @@ public class ExamLogin extends BaseModel {
 
     private String blankAnswers;
 
-    private float score;
+    private Double score;
 
     private Date loginDate;
 

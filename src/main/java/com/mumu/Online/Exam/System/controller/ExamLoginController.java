@@ -42,8 +42,8 @@ public class ExamLoginController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ExamLoginDTO get(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
-        return examLoginConverter.toDto(examLoginService.validate(apiKey, id));
+    public ExamLoginDTO get(@PathVariable("id") final Long id) {
+        return examLoginConverter.toDto(examLoginService.validate(id));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)

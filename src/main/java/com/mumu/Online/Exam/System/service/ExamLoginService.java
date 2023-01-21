@@ -8,7 +8,7 @@ import java.util.List;
 public interface ExamLoginService {
     Page<ExamLogin> getAll(String apiKey, Integer pageNumber, Integer pageSize, String[] filters, String sort);
 
-    ExamLogin validate(String apiKey, Long id);
+    ExamLogin validate(Long id);
 
     ExamLogin create(ExamLogin exam);
 
@@ -18,4 +18,5 @@ public interface ExamLoginService {
 
     void deleteByExamId(Long examId);
 
+    List<ExamLogin> getByExamId(Long examId);
 }

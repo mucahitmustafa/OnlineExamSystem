@@ -2,7 +2,9 @@ package com.mumu.Online.Exam.System.service.impl;
 
 import com.mumu.Online.Exam.System.builder.ExamSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.ExamNotFoundException;
+import com.mumu.Online.Exam.System.model.dto.ExamStatisticDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
+import com.mumu.Online.Exam.System.model.entity.ExamLogin;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.repository.ExamRepository;
 import com.mumu.Online.Exam.System.service.ExamLoginService;
@@ -18,10 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.counting;
 
 @Service
 public class ExamServiceImpl extends AbstractService implements ExamService {
@@ -98,6 +102,104 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
         List<Exam> exams = examRepository.findExamsTheStudentHasNotTaken(studentId);
         return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
                 exam.getStartDate().before(new Date())).collect(Collectors.toList());
+    }
+
+    @Override
+    public ExamStatisticDTO getStatistics(Long id) {
+        Exam exam = validate(id);
+        List<ExamLogin> examLogins = examLoginService.getByExamId(id);
+        ExamStatisticDTO examStatisticDTO = new ExamStatisticDTO();
+        examStatisticDTO.setId(id);
+        examStatisticDTO.setName(exam.getName());
+        examStatisticDTO.setTotalParticipants(examLogins.size());
+        examStatisticDTO.setAverageScore(examLogins.stream().mapToDouble(ExamLogin::getScore).average().orElse(0));
+        examStatisticDTO.setHighestScore(examLogins.stream().mapToDouble(ExamLogin::getScore).max().orElse(0));
+        examStatisticDTO.setLowestScore(examLogins.stream().mapToDouble(ExamLogin::getScore).min().orElse(0));
+
+        List<String> correctAnswers = new ArrayList<>();
+        examLogins.stream().map(ExamLogin::getCorrectAnswers).forEach(correctAnswersStr -> {
+            correctAnswers.addAll(Arrays.stream(correctAnswersStr.split(",")).collect(Collectors.toList()));
+        });
+
+        List<String> wrongAnswers = new ArrayList<>();
+        examLogins.stream().map(ExamLogin::getWrongAnswers).forEach(wrongAnswersStr -> {
+            wrongAnswers.addAll(Arrays.stream(wrongAnswersStr.split(",")).collect(Collectors.toList()));
+        });
+
+        List<String> blankAnswers = new ArrayList<>();
+        examLogins.stream().map(ExamLogin::getBlankAnswers).forEach(blankAnswersStr -> {
+            blankAnswers.addAll(Arrays.stream(blankAnswersStr.split(",")).collect(Collectors.toList()));
+        });
+
+        Set<Map.Entry<String, Long>> correctAnswerCounts = correctAnswers.stream().collect(Collectors
+                .groupingBy(Function.identity(), counting())).entrySet();
+
+        Set<Map.Entry<String, Long>> wrongAnswerCounts = wrongAnswers.stream().collect(Collectors
+                .groupingBy(Function.identity(), counting())).entrySet();
+
+        Set<Map.Entry<String, Long>> blankAnswerCounts = blankAnswers.stream().collect(Collectors
+                .groupingBy(Function.identity(), counting())).entrySet();
+
+        correctAnswerCounts.stream().max((first, second) -> (int) (first.getValue() - second.getValue()))
+                .ifPresent(stringLongEntry -> {
+                    if (!stringLongEntry.getKey().equals("")) {
+                        examStatisticDTO.setMostCorrectQuestionId(Long.parseLong(stringLongEntry.getKey()));
+                    }
+                });
+
+        wrongAnswerCounts.stream().max((first, second) -> (int) (first.getValue() - second.getValue()))
+                .ifPresent(stringLongEntry -> {
+                    if (!stringLongEntry.getKey().equals("")) {
+                        examStatisticDTO.setMostWrongQuestionId(Long.parseLong(stringLongEntry.getKey()));
+                    }
+                });
+
+        blankAnswerCounts.stream().max((first, second) -> (int) (first.getValue() - second.getValue()))
+                .ifPresent(stringLongEntry -> {
+                    if (!stringLongEntry.getKey().equals("")) {
+                        examStatisticDTO.setMostLeftBlankQuestionId(Long.parseLong(stringLongEntry.getKey()));
+                    }
+                });
+
+        if (examStatisticDTO.getMostCorrectQuestionId() == null) {
+            examStatisticDTO.setMostCorrectQuestionId(-1L);
+            examStatisticDTO.setMostCorrectQuestion("No question answered correctly");
+        } else {
+            Question question = questionService.getById(examStatisticDTO.getMostCorrectQuestionId());
+            examStatisticDTO.setMostCorrectQuestion(question.getIndex() + ". ) " + question.getText());
+        }
+
+        if (examStatisticDTO.getMostWrongQuestionId() == null) {
+            examStatisticDTO.setMostWrongQuestionId(-1L);
+            examStatisticDTO.setMostWrongQuestion("No question answered wrong");
+        } else {
+            Question question = questionService.getById(examStatisticDTO.getMostWrongQuestionId());
+            examStatisticDTO.setMostWrongQuestion(question.getIndex() + ". ) " + question.getText());
+        }
+
+        if (examStatisticDTO.getMostLeftBlankQuestionId() == null) {
+            examStatisticDTO.setMostLeftBlankQuestionId(-1L);
+            examStatisticDTO.setMostLeftBlankQuestion("No question left blank");
+        } else {
+            Question question = questionService.getById(examStatisticDTO.getMostLeftBlankQuestionId());
+            examStatisticDTO.setMostLeftBlankQuestion(question.getIndex() + ". ) " + question.getText());
+        }
+
+        HashMap<Long, String> questionStatistic = new HashMap<>();
+
+        List<Question> questions = questionService.getByExam(id);
+        questions.forEach(question -> {
+            long correctCount = correctAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+                    .toString())).mapToLong(Map.Entry::getValue).sum();
+            long wrongCount = wrongAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+                    .toString())).mapToLong(Map.Entry::getValue).sum();
+            long blankCount = blankAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+                    .toString())).mapToLong(Map.Entry::getValue).sum();
+            questionStatistic.put(question.getIndex(), correctCount + " / " + wrongCount + " / " + blankCount);
+        });
+
+        examStatisticDTO.setQuestionStatistic(questionStatistic);
+        return examStatisticDTO;
     }
 
     private Specification<Exam> getSpecification(String customer, String[] filters) {
