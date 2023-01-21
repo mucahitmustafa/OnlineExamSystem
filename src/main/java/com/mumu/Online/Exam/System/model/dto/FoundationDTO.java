@@ -15,6 +15,8 @@ public class FoundationDTO implements Serializable {
 
     private Long id;
     private String name;
+
+    private String publicCode;
     private List<StudentDTO> students;
     private List<ExamDTO> exams;
 

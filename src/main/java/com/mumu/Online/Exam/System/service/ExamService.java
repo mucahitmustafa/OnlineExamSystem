@@ -19,5 +19,5 @@ public interface ExamService {
 
     Exam getById(Long examId);
 
-    List<Exam> getUncompletedExamsAllByStudent(Long studentId);
+    List<Exam> getUncompletedExamsByStudent(Long studentId);
 }

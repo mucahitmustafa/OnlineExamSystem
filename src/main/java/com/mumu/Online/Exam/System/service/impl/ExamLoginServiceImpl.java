@@ -95,6 +95,8 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
                 String key = matcher.group(1);
                 String operator = matcher.group(2);
                 Object value = matcher.group(3);
+                if (value.equals("false")) value = false;
+                if (value.equals("true")) value = true;
                 builder.with(key, operator, value);
             }
         }

@@ -3,7 +3,6 @@ package com.mumu.Online.Exam.System.controller;
 import com.mumu.Online.Exam.System.controller.base.AbstractController;
 import com.mumu.Online.Exam.System.converter.FoundationConverter;
 import com.mumu.Online.Exam.System.model.dto.FoundationDTO;
-import com.mumu.Online.Exam.System.model.entity.Foundation;
 import com.mumu.Online.Exam.System.service.FoundationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +22,6 @@ public class FoundationController extends AbstractController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public FoundationDTO get(@RequestHeader("api-key") final String apiKey) {
         return foundationConverter.toDto(foundationService.validate(apiKey));
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public FoundationDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
-                                @RequestBody FoundationDTO changedDto) {
-        Foundation foundation = foundationConverter.toModel(changedDto);
-        foundation.setId(id);
-        return foundationConverter.toDto(foundationService.update(apiKey, foundation));
     }
 
 }

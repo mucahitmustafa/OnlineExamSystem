@@ -27,12 +27,12 @@ public class QuestionController extends AbstractController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Page<QuestionDTO> getAll(@RequestHeader("api-key") final String apiKey,
+                                    @RequestHeader(value = "filter", required = false) String filter,
                                     @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                    @RequestParam(value = "filters[]", required = false) String[] filters,
                                     @RequestParam(value = "sort", required = false) String sort) {
         if (pageNumber == null || pageNumber < 0) pageNumber = 1;
-        if (filters == null) filters = new String[0];
+        String[] filters =  (filter == null || filter.equals("")) ? new String[0] : new String[]{filter};
         return questionService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(questionConverter::toDto);
     }
 

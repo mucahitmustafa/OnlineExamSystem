@@ -94,7 +94,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
     }
 
     @Override
-    public List<Exam> getUncompletedExamsAllByStudent(Long studentId) {
+    public List<Exam> getUncompletedExamsByStudent(Long studentId) {
         List<Exam> exams = examRepository.findExamsTheStudentHasNotTaken(studentId);
         return exams.stream().filter(exam -> exam.getEndDate().after(new Date()) &&
                 exam.getStartDate().before(new Date())).collect(Collectors.toList());
@@ -111,6 +111,8 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
                 String key = matcher.group(1);
                 String operator = matcher.group(2);
                 Object value = matcher.group(3);
+                if (value.equals("false")) value = false;
+                if (value.equals("true")) value = true;
                 builder.with(key, operator, value);
             }
         }

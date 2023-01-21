@@ -4,9 +4,11 @@ import com.mumu.Online.Exam.System.builder.StudentSpecificationBuilder;
 import com.mumu.Online.Exam.System.exception.StudentAlreadyExistException;
 import com.mumu.Online.Exam.System.exception.StudentNotFoundException;
 import com.mumu.Online.Exam.System.exception.WrongMailOrPasswordException;
+import com.mumu.Online.Exam.System.model.entity.Foundation;
 import com.mumu.Online.Exam.System.model.entity.Student;
 import com.mumu.Online.Exam.System.repository.StudentRepository;
 import com.mumu.Online.Exam.System.service.ExamLoginService;
+import com.mumu.Online.Exam.System.service.FoundationService;
 import com.mumu.Online.Exam.System.service.StudentService;
 import com.mumu.Online.Exam.System.service.base.AbstractService;
 import com.mumu.Online.Exam.System.utils.ApiKeyUtil;
@@ -26,10 +28,13 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
 
     private final StudentRepository studentRepository;
     private final ExamLoginService examLoginService;
+    private final FoundationService foundationService;
 
-    public StudentServiceImpl(final StudentRepository studentRepository, final ExamLoginService examLoginService) {
+    public StudentServiceImpl(final StudentRepository studentRepository, final ExamLoginService examLoginService,
+                              final FoundationService foundationService) {
         this.studentRepository = studentRepository;
         this.examLoginService = examLoginService;
+        this.foundationService = foundationService;
     }
 
     @Override
@@ -77,6 +82,7 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
         student.setCustomer(customer);
         student.setCreated(new Date());
         student.setUpdated(new Date());
+        student.setVerified(true);
         return studentRepository.save(student);
     }
 
@@ -87,7 +93,31 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
 
     @Override
     public Student login(String mail, String password) {
-        return studentRepository.findByMailAndPassword(mail, password).orElseThrow(WrongMailOrPasswordException::new);
+        return studentRepository.findByMailAndPasswordAndVerifiedTrue(mail, password).orElseThrow(WrongMailOrPasswordException::new);
+    }
+
+    @Override
+    public void register(String foundationCode, Student student) {
+        Foundation foundation = foundationService.getByPublicCode(foundationCode);
+        if (studentRepository.existsByMail(student.getMail())) {
+            throw new StudentAlreadyExistException();
+        }
+        if (studentRepository.existsByNumberAndCustomer(student.getNumber(), foundation.getCustomer())) {
+            throw new StudentAlreadyExistException();
+        }
+
+        student.setCustomer(foundation.getCustomer());
+        student.setCreated(new Date());
+        student.setUpdated(new Date());
+        student.setVerified(false);
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void approve(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+        student.setVerified(true);
+        studentRepository.save(student);
     }
 
     private Specification<Student> getSpecification(String customer, String[] filters) {
@@ -101,6 +131,8 @@ public class StudentServiceImpl extends AbstractService implements StudentServic
                 String key = matcher.group(1);
                 String operator = matcher.group(2);
                 Object value = matcher.group(3);
+                if (value.equals("false")) value = false;
+                if (value.equals("true")) value = true;
                 builder.with(key, operator, value);
             }
         }

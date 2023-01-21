@@ -25,12 +25,12 @@ public class StudentController extends AbstractController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Page<StudentDTO> getAll(@RequestHeader("api-key") final String apiKey,
+                                   @RequestHeader(value = "filter", required = false) String filter,
                                    @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                   @RequestParam(value = "filters[]", required = false) String[] filters,
                                    @RequestParam(value = "sort", required = false) String sort) {
         if (pageNumber == null || pageNumber < 0) pageNumber = 1;
-        if (filters == null) filters = new String[0];
+        String[] filters =  (filter == null || filter.equals("")) ? new String[0] : new String[]{filter};
         return studentService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(studentConverter::toDto);
     }
 
@@ -41,8 +41,12 @@ public class StudentController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id) {
-        studentService.delete(apiKey, id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            studentService.delete(apiKey, id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -50,6 +54,7 @@ public class StudentController extends AbstractController {
                              @RequestBody StudentDTO changedDto) {
         Student student = studentConverter.toModel(changedDto);
         student.setId(id);
+        student.setVerified(true);
         return studentConverter.toDto(studentService.update(apiKey, student));
     }
 
@@ -62,6 +67,28 @@ public class StudentController extends AbstractController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public StudentDTO login(@RequestBody StudentLoginDTO loginDTO) {
         return studentConverter.toDto(studentService.login(loginDTO.getMail(), loginDTO.getPassword()));
+    }
+
+    @RequestMapping(value = "/register/{foundationCode}", method = RequestMethod.POST)
+    public ResponseEntity<Void> register(@PathVariable("foundationCode") final String foundationCode,
+                               @RequestBody StudentDTO studentDto) {
+        Student student = studentConverter.toModel(studentDto);
+        try {
+            studentService.register(foundationCode, student);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/approve/{id}", method = RequestMethod.POST)
+    public ResponseEntity<Void> approve(@PathVariable("id") final Long id) {
+        try {
+            studentService.approve(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

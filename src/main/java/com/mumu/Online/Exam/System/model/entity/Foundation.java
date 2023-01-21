@@ -20,4 +20,6 @@ public class Foundation extends BaseModel {
 
     private String name;
 
+    private String publicCode;
+
 }

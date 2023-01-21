@@ -17,4 +17,8 @@ public interface StudentService {
     Student getById(Long studentId);
 
     Student login(String username, String password);
+
+    void register(String foundationCode, Student student);
+
+    void approve(Long id);
 }

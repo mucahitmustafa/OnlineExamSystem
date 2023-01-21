@@ -6,6 +6,5 @@ public interface FoundationService {
 
     Foundation validate(final String apiKey);
 
-    Foundation update(final String apiKey, Foundation foundation);
-
+    Foundation getByPublicCode(String publicCode);
 }

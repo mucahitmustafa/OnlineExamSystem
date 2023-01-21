@@ -13,4 +13,5 @@ public interface FoundationRepository extends JpaRepository<Foundation, Long> {
 
     Optional<Foundation> findByCustomer(String customer);
 
+    Optional<Foundation> findByPublicCode(String publicCode);
 }

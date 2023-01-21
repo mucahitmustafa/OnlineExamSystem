@@ -7,6 +7,4 @@ public interface FoundationConverter {
 
     FoundationDTO toDto(Foundation from);
 
-    Foundation toModel(FoundationDTO from);
-
 }

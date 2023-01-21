@@ -5,7 +5,6 @@ import com.mumu.Online.Exam.System.converter.ExamConverter;
 import com.mumu.Online.Exam.System.converter.QuestionConverter;
 import com.mumu.Online.Exam.System.model.dto.ExamDTO;
 import com.mumu.Online.Exam.System.model.dto.ExamUpdateDTO;
-import com.mumu.Online.Exam.System.model.dto.QuestionDTO;
 import com.mumu.Online.Exam.System.model.entity.Exam;
 import com.mumu.Online.Exam.System.model.entity.Question;
 import com.mumu.Online.Exam.System.service.ExamService;
@@ -34,18 +33,18 @@ public class ExamController extends AbstractController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Page<ExamDTO> getAll(@RequestHeader("api-key") final String apiKey,
+                                @RequestHeader(value = "filter", required = false) String filter,
                                 @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                 @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                @RequestParam(value = "filters[]", required = false) String[] filters,
                                 @RequestParam(value = "sort", required = false) String sort) {
         if (pageNumber == null || pageNumber < 0) pageNumber = 1;
-        if (filters == null) filters = new String[0];
+        String[] filters =  (filter == null || filter.equals("")) ? new String[0] : new String[]{filter};
         return examService.getAll(apiKey, pageNumber, pageSize, filters, sort).map(examConverter::toDto);
     }
 
     @RequestMapping(value = "/byStudent/{studentId}", method = RequestMethod.GET)
     public List<ExamDTO> getAllByStudent(@PathVariable("studentId") final Long studentId) {
-        return examService.getUncompletedExamsAllByStudent(studentId).stream().map(examConverter::toDto)
+        return examService.getUncompletedExamsByStudent(studentId).stream().map(examConverter::toDto)
                 .collect(Collectors.toList());
     }
 

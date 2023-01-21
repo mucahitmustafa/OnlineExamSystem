@@ -26,4 +26,6 @@ public class Student extends BaseModel {
 
     private String number;
 
+    private boolean verified;
+
 }
