@@ -21,5 +21,8 @@ public class ExamLoginDTO implements Serializable {
     private String answers;
     private float score;
     private Date loginDate;
+    private Integer correctAnswerCount;
+    private Integer wrongAnswerCount;
+    private Integer blankAnswerCount;
 
 }

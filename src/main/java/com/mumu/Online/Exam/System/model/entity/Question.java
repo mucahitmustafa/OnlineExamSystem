@@ -18,6 +18,8 @@ public class Question extends BaseModel {
     @Column(columnDefinition = "serial")
     private Long id;
 
+    private Long index;
+
     @ManyToOne
     private Exam exam;
 
@@ -26,5 +28,7 @@ public class Question extends BaseModel {
     private String answers;
 
     private int correctAnswerIndex;
+
+    private int score;
 
 }

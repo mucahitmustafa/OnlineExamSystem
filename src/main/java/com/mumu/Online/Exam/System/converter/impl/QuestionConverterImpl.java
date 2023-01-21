@@ -23,6 +23,8 @@ public class QuestionConverterImpl implements QuestionConverter {
     public QuestionDTO toDto(Question from) {
         QuestionDTO to = new QuestionDTO();
         to.setId(from.getId());
+        to.setScore(from.getScore());
+        to.setIndex(from.getIndex());
         to.setExamId(from.getExam().getId());
         to.setText(from.getText());
         to.setAnswers(Arrays.stream(from.getAnswers().split("###")).collect(Collectors.toList()));
@@ -34,6 +36,8 @@ public class QuestionConverterImpl implements QuestionConverter {
     public Question toModel(QuestionDTO from) {
         Question to = new Question();
         to.setId(from.getId());
+        to.setScore(from.getScore());
+        to.setIndex(from.getIndex());
         to.setExam(examService.getById(from.getExamId()));
         to.setText(from.getText());
         to.setAnswers(String.join("###", from.getAnswers()));
@@ -45,6 +49,8 @@ public class QuestionConverterImpl implements QuestionConverter {
     public Question toModelForCreate(QuestionDTO from) {
         Question to = new Question();
         to.setText(from.getText());
+        to.setScore(from.getScore());
+        to.setIndex(from.getIndex());
         to.setAnswers(String.join("###", from.getAnswers()));
         to.setCorrectAnswerIndex(from.getCorrectAnswerIndex());
         return to;

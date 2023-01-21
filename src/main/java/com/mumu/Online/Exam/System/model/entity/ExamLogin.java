@@ -27,6 +27,12 @@ public class ExamLogin extends BaseModel {
 
     private String answers;
 
+    private String correctAnswers;
+
+    private String wrongAnswers;
+
+    private String blankAnswers;
+
     private float score;
 
     private Date loginDate;

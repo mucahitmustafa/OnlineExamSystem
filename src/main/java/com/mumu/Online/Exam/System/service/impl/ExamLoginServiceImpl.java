@@ -57,14 +57,25 @@ public class ExamLoginServiceImpl extends AbstractService implements ExamLoginSe
         String[] answers = examLogin.getAnswers().split(",");
         Long examId = examLogin.getExam().getId();
         List<Question> questions = questionService.getByExam(examId);
+        List<String> blankAnswers = new ArrayList<>();
+        List<String> correctAnswers = new ArrayList<>();
+        List<String> wrongAnswers = new ArrayList<>();
         int score = 0;
         for (int i = 0; i < questions.size(); i++) {
             Question q = questions.get(i);
             String answer = answers[i];
             if (Objects.equals(answer, Arrays.asList("A", "B", "C", "D").get(q.getCorrectAnswerIndex()))) {
-                score += 100 / questions.size();
+                score += q.getScore();
+                correctAnswers.add("" + q.getIndex());
+            } else if (answer.equals("#")) {
+                blankAnswers.add("" + q.getIndex());
+            } else {
+                wrongAnswers.add("" + q.getIndex());
             }
         }
+        examLogin.setBlankAnswers(String.join(",", blankAnswers));
+        examLogin.setCorrectAnswers(String.join(",", correctAnswers));
+        examLogin.setWrongAnswers(String.join(",", wrongAnswers));
         examLogin.setScore(Math.min(score, 100));
         return examLoginRepository.save(examLogin);
     }
