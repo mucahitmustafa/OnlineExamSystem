@@ -166,7 +166,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
             examStatisticDTO.setMostCorrectQuestionId(-1L);
             examStatisticDTO.setMostCorrectQuestion("No question answered correctly");
         } else {
-            Question question = questionService.getById(examStatisticDTO.getMostCorrectQuestionId());
+            Question question = questionService.getByExamIdAndIndex(id, examStatisticDTO.getMostCorrectQuestionId());
             examStatisticDTO.setMostCorrectQuestion(question.getIndex() + ". ) " + question.getText());
         }
 
@@ -174,7 +174,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
             examStatisticDTO.setMostWrongQuestionId(-1L);
             examStatisticDTO.setMostWrongQuestion("No question answered wrong");
         } else {
-            Question question = questionService.getById(examStatisticDTO.getMostWrongQuestionId());
+            Question question = questionService.getByExamIdAndIndex(id, examStatisticDTO.getMostWrongQuestionId());
             examStatisticDTO.setMostWrongQuestion(question.getIndex() + ". ) " + question.getText());
         }
 
@@ -182,7 +182,7 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
             examStatisticDTO.setMostLeftBlankQuestionId(-1L);
             examStatisticDTO.setMostLeftBlankQuestion("No question left blank");
         } else {
-            Question question = questionService.getById(examStatisticDTO.getMostLeftBlankQuestionId());
+            Question question = questionService.getByExamIdAndIndex(id, examStatisticDTO.getMostLeftBlankQuestionId());
             examStatisticDTO.setMostLeftBlankQuestion(question.getIndex() + ". ) " + question.getText());
         }
 
@@ -190,11 +190,11 @@ public class ExamServiceImpl extends AbstractService implements ExamService {
 
         List<Question> questions = questionService.getByExam(id);
         questions.forEach(question -> {
-            long correctCount = correctAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+            long correctCount = correctAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getIndex()
                     .toString())).mapToLong(Map.Entry::getValue).sum();
-            long wrongCount = wrongAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+            long wrongCount = wrongAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getIndex()
                     .toString())).mapToLong(Map.Entry::getValue).sum();
-            long blankCount = blankAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getId()
+            long blankCount = blankAnswerCounts.stream().filter(entry -> entry.getKey().equals(question.getIndex()
                     .toString())).mapToLong(Map.Entry::getValue).sum();
             questionStatistic.put(question.getIndex(), correctCount + " / " + wrongCount + " / " + blankCount);
         });

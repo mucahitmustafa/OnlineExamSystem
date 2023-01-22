@@ -22,5 +22,7 @@ public interface QuestionService {
 
     Question getById(Long questionId);
 
+    Question getByExamIdAndIndex(Long examId, Long index);
+
     int countByExam(Long examId);
 }

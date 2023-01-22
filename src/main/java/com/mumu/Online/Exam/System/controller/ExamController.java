@@ -77,7 +77,8 @@ public class ExamController extends AbstractController {
     }
 
     @RequestMapping(value = "/statistics/{id}", method = RequestMethod.GET)
-    public ExamStatisticDTO statistics(@PathVariable("id") final Long id) {
+    public ExamStatisticDTO statistics(@RequestHeader(value = "api-key", required = false) final String apiKey,
+                                       @PathVariable("id") final Long id) {
         return examService.getStatistics(id);
     }
 }

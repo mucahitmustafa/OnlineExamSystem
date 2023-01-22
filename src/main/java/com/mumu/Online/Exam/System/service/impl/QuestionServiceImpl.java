@@ -88,6 +88,11 @@ public class QuestionServiceImpl extends AbstractService implements QuestionServ
     }
 
     @Override
+    public Question getByExamIdAndIndex(Long examId, Long index) {
+        return questionRepository.findByExamIdAndIndex(examId, index).orElseThrow(QuestionNotFoundException::new);
+    }
+
+    @Override
     public int countByExam(Long examId) {
         return questionRepository.countByExamId(examId);
     }
