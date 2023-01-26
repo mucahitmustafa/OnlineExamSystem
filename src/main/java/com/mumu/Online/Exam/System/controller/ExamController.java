@@ -63,10 +63,10 @@ public class ExamController extends AbstractController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ExamDTO update(@RequestHeader("api-key") final String apiKey, @PathVariable("id") final Long id,
                           @RequestBody ExamUpdateDTO changedDto) {
+        changedDto.setId(id);
         Exam exam = examConverter.toModelForUpdate(changedDto);
         List<Question> questions = changedDto.getQuestions().stream().map(questionConverter::toModelForCreate)
                 .collect(Collectors.toList());
-        exam.setId(id);
         return examConverter.toDto(examService.update(apiKey, exam, questions));
     }
 
